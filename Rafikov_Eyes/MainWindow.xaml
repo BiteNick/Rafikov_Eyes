@@ -1,0 +1,17 @@
+﻿<Window x:Class="Rafikov_Eyes.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rafikov_Eyes"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" FontFamily="Tw Cen MT" Icon="Resources/Глазки-save.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Image Source="Resources/Глазки-save.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+    </Grid>
+</Window>
