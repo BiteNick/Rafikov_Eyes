@@ -82,7 +82,10 @@
         </ListView>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Name="LeftDirButton" Content="&lt;" Width="20" Height="30" Click="LeftDirButton_Click"></Button>
+            <TextBlock Name="TBCount" FontSize="20" Text="3" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Text="|" FontSize="20" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Name="TBRecords" FontSize="20" Text="3" VerticalAlignment="Center"></TextBlock>
+            <Button Name="LeftDirButton" Content="&lt;" Width="20" Click="LeftDirButton_Click" VerticalAlignment="Center"></Button>
             <ListBox FontSize="20" Name="PageListBox" MouseUp="PageListBox_MouseUp">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -90,7 +93,7 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
-            <Button Name="RightDirButton" Content="&gt;" Width="20" Height="30" Click="RightDirButton_Click"></Button>
+            <Button Name="RightDirButton" Content="&gt;" Width="20" Click="RightDirButton_Click" VerticalAlignment="Center"></Button>
         </StackPanel>
 
     </Grid>

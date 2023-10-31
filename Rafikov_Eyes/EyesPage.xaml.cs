@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace Rafikov_Eyes
 {
@@ -73,7 +74,9 @@ namespace Rafikov_Eyes
                     currentDBList = currentDBList.OrderByDescending(p => p.Priority).ToList();
                     break;
             }
-            currentDBList = currentDBList.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower()) || p.Email.ToLower().Contains(TBoxSearch.Text.ToLower()) || TBoxSearch.Text.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "").Contains(p.Phone)).ToList();
+            Regex regex = new Regex(@"\D");
+            currentDBList = currentDBList.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower()) || p.Email.ToLower().Contains(TBoxSearch.Text.ToLower()) || regex.Replace(p.Phone, "").Contains(TBoxSearch.Text)).ToList();
+
             
 
             EyesListView.ItemsSource = currentDBList.ToList();
@@ -163,6 +166,8 @@ namespace Rafikov_Eyes
 
                 EyesListView.Items.Refresh();
             }
+            TBCount.Text = (CurrentPage+1).ToString();
+            TBRecords.Text = CountPage.ToString();
         }
 
         private void TBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
