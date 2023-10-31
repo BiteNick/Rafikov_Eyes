@@ -85,11 +85,8 @@ namespace Rafikov_Eyes
             ChangePage(0, 0);
         }
 
-        private void ChangePage(int direction, int? selectedPage)
+        private void ChangePage(int direction, int? selectedPage) //direction - 1: left, 2: right
         {
-            CurrentPageList.Clear();
-            CountRecords = TableList.Count;
-
             if (CountRecords % 10 > 0)
             {
                 CountPage = CountRecords / 10 + 1;
@@ -98,6 +95,11 @@ namespace Rafikov_Eyes
             {
                 CountPage = CountRecords / 10;
             }
+
+            if (direction == 1 && CurrentPage - 1 < 0 || direction == 2 && CurrentPage + 1 >= CountPage)
+                return;
+            CurrentPageList.Clear();
+            CountRecords = TableList.Count;
 
             Boolean IfUpdate = true;
 
