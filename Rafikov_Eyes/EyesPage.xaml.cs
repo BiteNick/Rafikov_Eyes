@@ -28,8 +28,6 @@ namespace Rafikov_Eyes
         private List<Agent> CurrentPageList = new List<Agent>();
         private List<Agent> TableList;
 
-        private Regex regex = new Regex(@"\D");
-
         public EyesPage()
         {
             
@@ -76,10 +74,12 @@ namespace Rafikov_Eyes
                     currentDBList = currentDBList.OrderByDescending(p => p.Priority).ToList();
                     break;
             }
+            Regex regex = new Regex(@"\D");
             currentDBList = currentDBList.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower()) || p.Email.ToLower().Contains(TBoxSearch.Text.ToLower()) || regex.Replace(p.Phone, "").Contains(TBoxSearch.Text)).ToList();
 
             
 
+            EyesListView.ItemsSource = currentDBList.ToList();
             TableList = currentDBList;
 
             ChangePage(0, 0);
@@ -98,9 +98,10 @@ namespace Rafikov_Eyes
 
             if (direction == 1 && CurrentPage - 1 < 0 || direction == 2 && CurrentPage + 1 >= CountPage)
                 return;
-
             CurrentPageList.Clear();
             CountRecords = TableList.Count;
+
+            Boolean IfUpdate = true;
 
             int min;
 
@@ -121,36 +122,52 @@ namespace Rafikov_Eyes
                 switch (direction)
                 {
                     case 1:
-                        CurrentPage--;
-                        min = CurrentPage * 10 + 10 < CountRecords ? CurrentPage * 10 + 10 : CountRecords;
-                        for (int i = CurrentPage * 10; i < min; i++)
+                        if (CurrentPage > 0)
                         {
-                            CurrentPageList.Add(TableList[i]);
+                            CurrentPage--;
+                            min = CurrentPage * 10 + 10 < CountRecords ? CurrentPage * 10 + 10 : CountRecords;
+                            for (int i = CurrentPage * 10; i < min; i++)
+                            {
+                                CurrentPageList.Add(TableList[i]);
+                            }
+                        }
+                        else
+                        {
+                            IfUpdate = false;
                         }
                         break;
 
                     case 2:
-                        CurrentPage++;
-                        min = CurrentPage * 10 + 10 < CountRecords ? CurrentPage * 10 + 10 : CountRecords;
-                        for (int i = CurrentPage * 10; i < min; i++)
+                        if (CurrentPage < CountPage - 1)
                         {
-                            CurrentPageList.Add(TableList[i]);
+                            CurrentPage++;
+                            min = CurrentPage * 10 + 10 < CountRecords ? CurrentPage * 10 + 10 : CountRecords;
+                            for (int i = CurrentPage * 10; i < min; i++)
+                            {
+                                CurrentPageList.Add(TableList[i]);
+                            }
+                        }
+                        else
+                        {
+                            IfUpdate = false;
                         }
                         break;
                 }
             }
-            PageListBox.Items.Clear();
-
-            for (int i = 1; i <= CountPage; i++)
+            if (IfUpdate)
             {
-                PageListBox.Items.Add(i);
+                PageListBox.Items.Clear();
+
+                for (int i = 1; i <= CountPage; i++)
+                {
+                    PageListBox.Items.Add(i);
+                }
+                PageListBox.SelectedIndex = CurrentPage;
+
+                EyesListView.ItemsSource = CurrentPageList;
+
+                EyesListView.Items.Refresh();
             }
-            PageListBox.SelectedIndex = CurrentPage;
-
-            EyesListView.ItemsSource = CurrentPageList;
-
-            EyesListView.Items.Refresh();
-
             TBCount.Text = (CurrentPage+1).ToString();
             TBRecords.Text = CountPage.ToString();
         }
