@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:Rafikov_Eyes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="EyesPage">
+      Title="EyesPage"
+      IsVisibleChanged="Page_IsVisibleChanged">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,10 +18,10 @@
         </Grid.RowDefinitions>
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <StackPanel Margin="10" Orientation="Horizontal">
-                <TextBox Name="TBoxSearch" TextChanged="TBoxSearch_TextChanged" Width="300" FontSize="15" Margin="5"></TextBox>
+                <TextBox Name="TBoxSearch" TextChanged="TBoxSearch_TextChanged" Width="200" FontSize="15" Margin="5"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <ComboBox Name="Sorting" SelectionChanged="Sorting_SelectionChanged" FontSize="15" Width="200" Margin="5">
+                <ComboBox Name="Sorting" SelectionChanged="Sorting_SelectionChanged" FontSize="15" Width="150" Margin="5">
                     <TextBlock>Сортировка</TextBlock>
                     <TextBlock>Наименование по возрастанию</TextBlock>
                     <TextBlock>Наименование по убыванию</TextBlock>
@@ -31,7 +32,7 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <ComboBox Name="Types" SelectionChanged="Types_SelectionChanged" FontSize="15" Width="200" Margin="5">
+                <ComboBox Name="Types" SelectionChanged="Types_SelectionChanged" FontSize="15" Width="150" Margin="5">
                     <TextBlock>Все типы</TextBlock>
                     <TextBlock>ЗАО</TextBlock>
                     <TextBlock>МКК</TextBlock>
@@ -41,9 +42,11 @@
                     <TextBlock>ПАО</TextBlock>
                 </ComboBox>
             </StackPanel>
+            <Button Content="Добавить" Name="AddButton" Click="AddButton_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Width="140"/>
         </WrapPanel>
+
         
-        
+
         <ListView Name="EyesListView" Grid.Row="2">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -51,12 +54,13 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"/>
                             <RowDefinition Height="35"/>
                             <RowDefinition Height="35"/>
-                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
                         <Image Width="160" Grid.Column="0" Grid.RowSpan="5" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Image.Source>
@@ -75,7 +79,8 @@
                                 <TextBlock Text="{Binding Title}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" FontSize="20" />
                             </StackPanel>
                             <TextBlock Text="{Binding Phone}" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" FontSize="18" />
-                        <TextBlock Text="{Binding Priority, StringFormat=Приоритеность: {0}}" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" FontSize="18" />
+                        <TextBlock Text="{Binding Priority, StringFormat=Приоритеность: {0}}" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" FontSize="18" VerticalAlignment="Center"/>
+                        <Button Grid.Column="2" Grid.Row="3" Content="Изменить" Name="EditButton" Click="EditButton_Click" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

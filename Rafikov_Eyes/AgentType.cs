@@ -34,5 +34,12 @@ namespace Rafikov_Eyes
                 return Title;
             }
         }
+        public int GetIDByType
+        {
+            get
+            {
+                return ID;
+            }
+        }
     }
 }

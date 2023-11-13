@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace Rafikov_Eyes
 {
@@ -20,9 +22,120 @@ namespace Rafikov_Eyes
     /// </summary>
     public partial class AddEditPage : Page
     {
-        public AddEditPage()
+        private Agent currentAgent = new Agent();
+        private Regex regex = new Regex(@"\D");
+        List<AgentType> AgentTypesDBList = Rafikov_eyesEntities.GetContext().AgentType.ToList();
+
+        public AddEditPage(Agent AgentInfo)
         {
             InitializeComponent();
+            if (AgentInfo != null)
+            {
+                currentAgent = AgentInfo;
+                ComboType.SelectedIndex = currentAgent.AgentTypeID-1;
+            }
+
+            DataContext = currentAgent;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder errors = new StringBuilder();
+            if (string.IsNullOrWhiteSpace(currentAgent.Title))
+                errors.AppendLine("Укажите наименование агента");
+            if (string.IsNullOrWhiteSpace(currentAgent.Address))
+                errors.AppendLine("Укажите адрес агента");
+            if (string.IsNullOrWhiteSpace(currentAgent.DirectorName))
+                errors.AppendLine("Укажите ФИО директора");
+            if (ComboType.SelectedItem == null)
+                errors.AppendLine("Укажите тип агента");
+
+            if (string.IsNullOrWhiteSpace(currentAgent.Priority.ToString()))
+                errors.AppendLine("Укажите приоритет агента");
+            if (currentAgent.Priority <= 0)
+                errors.AppendLine("Укажите положительный приоритет агента");
+            if (string.IsNullOrWhiteSpace(currentAgent.INN))
+                errors.AppendLine("Укажите ИНН агента");
+            if (string.IsNullOrWhiteSpace(currentAgent.KPP))
+                errors.AppendLine("Укажите КПП агента");
+            if (string.IsNullOrWhiteSpace(currentAgent.Phone))
+                errors.AppendLine("Укажите телефон агента");
+
+            else
+            {
+                string phoneNumber = regex.Replace(currentAgent.Phone, "");
+                    if (((phoneNumber[1] == '9' || phoneNumber[1] == '4' || phoneNumber[1] == '8') && phoneNumber.Length != 11) || (phoneNumber[1] == '3' && phoneNumber.Length != 12))
+                        errors.AppendLine("Укажите правильно телефон агента");
+            }
+            if (string.IsNullOrWhiteSpace(currentAgent.Email))
+                errors.AppendLine("Укажите почту агента");
+            if (errors.Length > 0)
+            {
+                MessageBox.Show(errors.ToString());
+                return;
+            }
+
+            var currentType = (TextBlock)ComboType.SelectedValue;
+            string currentTypeContent = currentType.Text;
+            foreach (AgentType type in AgentTypesDBList)
+            {
+                if (type.Title.ToString() == currentTypeContent)
+                {
+                    currentAgent.AgentType = type;
+                    currentAgent.AgentTypeID = type.ID;
+                    break;
+                }
+            }
+
+            if (currentAgent.ID == 0)
+                Rafikov_eyesEntities.GetContext().Agent.Add(currentAgent);
+
+            try
+            {
+                Rafikov_eyesEntities.GetContext().SaveChanges();
+                MessageBox.Show("Дело сделано");
+                Manager.MainFrame.GoBack();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var currentProductSale = Rafikov_eyesEntities.GetContext().ProductSale.ToList();
+            currentProductSale = currentProductSale.Where(p => p.AgentID == currentAgent.ID).ToList();
+            if (currentProductSale.Count != 0)
+                MessageBox.Show("Невозможно удалить запись, так как существует реализация продукта");
+            else
+            {
+                if (MessageBox.Show("Вы точно хотите выполнить удаление?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        Rafikov_eyesEntities.GetContext().Agent.Remove(currentAgent);
+                        Rafikov_eyesEntities.GetContext().SaveChanges();
+                        MessageBox.Show("Запись удалена");
+                        Manager.MainFrame.GoBack();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                    }
+                }
+            }
+        }
+
+        private void ChangePictureButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog myOpenFileDialog = new OpenFileDialog();
+            if (myOpenFileDialog.ShowDialog() == true)
+            {
+                currentAgent.Logo = myOpenFileDialog.FileName;
+                LogoImage.Source = new BitmapImage(new Uri(myOpenFileDialog.FileName));
+            }
         }
     }
 }

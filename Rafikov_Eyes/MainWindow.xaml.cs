@@ -43,5 +43,7 @@ namespace Rafikov_Eyes
                 BtnBack.Visibility = Visibility.Hidden;
             }
         }
+
+        
     }
 }
