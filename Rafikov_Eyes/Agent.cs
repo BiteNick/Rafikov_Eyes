@@ -42,6 +42,8 @@ namespace Rafikov_Eyes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shop> Shop { get; set; }
 
+        public decimal Discount { get; set; }
+
         public string AgentTypeString
         {
             get
@@ -49,5 +51,23 @@ namespace Rafikov_Eyes
                 return AgentType.Title;
             }
         }
+
+        public string BackgroundColor
+        {
+            get
+            {
+                if (Discount >= 25)
+                    return "lightGreen";
+                else
+                    return "";
+            }
+            set
+            {
+
+            }
+        }
+
     }
+
+
 }

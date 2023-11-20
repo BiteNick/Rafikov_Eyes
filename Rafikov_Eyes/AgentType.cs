@@ -27,13 +27,6 @@ namespace Rafikov_Eyes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Agent> Agent { get; set; }
 
-        public string GetTypeByID
-        {
-            get
-            {
-                return Title;
-            }
-        }
         public int GetIDByType
         {
             get

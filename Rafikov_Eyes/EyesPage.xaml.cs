@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace Rafikov_Eyes
 {
@@ -52,7 +53,7 @@ namespace Rafikov_Eyes
             {
                 var CurrentType = (TextBlock)Types.SelectedValue;
                 string CurrentTypeContent = CurrentType.Text;
-                currentDBList = currentDBList.Where(p => AgentTypesDBList[p.AgentTypeID - 1].GetTypeByID == CurrentTypeContent).ToList();
+                currentDBList = currentDBList.Where(p => AgentTypesDBList[p.AgentTypeID - 1].Title == CurrentTypeContent).ToList();
             }
 
             switch (Sorting.SelectedIndex)
@@ -82,7 +83,7 @@ namespace Rafikov_Eyes
 
             TableList = currentDBList;
 
-
+            SelectedItemsUpdate();
             ChangePage(0, 0);
         }
 
@@ -150,11 +151,53 @@ namespace Rafikov_Eyes
 
             EyesListView.ItemsSource = CurrentPageList;
 
+            var productSale = Rafikov_eyesEntities.GetContext().ProductSale.ToList();
+
+            foreach (Agent item in EyesListView.ItemsSource)
+            {
+                var currentProductSale = productSale.Where(p => p.AgentID == item.ID).ToList();
+                if (currentProductSale.Count > 0)
+                {
+                    decimal TotalCost = 0;
+                    foreach (ProductSale productSaleItem in currentProductSale)
+                    {
+                        TotalCost += productSaleItem.Product.MinCostForAgent * productSaleItem.ProductCount;
+                    }
+
+                    if (TotalCost >= 10_000 && TotalCost <= 50_000)
+                        item.Discount = 5;
+
+                    else if (TotalCost >= 50_000 && TotalCost <= 150_000)
+                        item.Discount = 10;
+
+                    else if (TotalCost >= 150_000 && TotalCost <= 500_000)
+                        item.Discount = 20;
+
+                    else if (TotalCost >= 500_000)
+                        item.Discount = 25;
+
+                }
+            }
+
             EyesListView.Items.Refresh();
 
             TBCount.Text = (CurrentPage + 1).ToString();
             TBRecords.Text = CountPage.ToString();
         }
+
+
+        private void SelectedItemsUpdate()
+        {
+            if (EyesListView.SelectedItems.Count > 0)
+            {
+                ChangePriorityButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ChangePriorityButton.Visibility = Visibility.Hidden;
+            }
+        }
+
 
         private void TBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -165,10 +208,12 @@ namespace Rafikov_Eyes
         private void Sorting_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateServices();
+            UpdateServices();
         }
 
         private void Types_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            UpdateServices();
             UpdateServices();
         }
 
@@ -205,6 +250,19 @@ namespace Rafikov_Eyes
                 UpdateServices();
                 UpdateServices();
             }
+        }
+
+        private void EyesListView_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            SelectedItemsUpdate();
+        }
+
+        private void ChangePriorityButton_Click(object sender, RoutedEventArgs e)
+        {
+            IList selectedRows = (IList)EyesListView.SelectedItems;
+            PriorityWindow priorityWindow = new PriorityWindow(selectedRows.Cast<Agent>().ToList(), this);
+
+            priorityWindow.ShowDialog();
         }
     }
 }

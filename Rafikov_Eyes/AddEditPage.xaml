@@ -17,6 +17,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -34,7 +36,7 @@
             <TextBlock Text="Директор" FontSize="15" Height="20" MinWidth="120" Width="auto" Margin="5"/>
             <TextBox Text="{Binding DirectorName}" FontSize="15" Height="20" Width="400"/>
         </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Grid.RowSpan="4">
+        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Grid.RowSpan="6">
             <TextBlock Text="Логотип" FontSize="15" Height="20" Width="auto" Margin="5"/>
             <Image Name="LogoImage" Stretch="UniformToFill" MinHeight="50" Height="100" Width="100" HorizontalAlignment="Left" Margin="5">
                 <Image.Source>
@@ -46,7 +48,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Тип агента" FontSize="15" Height="20" Width="100" Margin="5"/>
-            <ComboBox FontSize="15" Height="25" Width="100" Name="ComboType" Text="Binding AgentTypeID">
+            <ComboBox FontSize="12" Height="20" Width="100" Name="ComboType" Text="Binding AgentTypeID">
                 <TextBlock Text="ЗАО"/>
                 <TextBlock Text="МКК"/>
                 <TextBlock Text="МФО"/>
@@ -76,6 +78,11 @@
             <TextBox Text="{Binding Email}" FontSize="15" Height="20" Width="100"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+            <TextBlock Text="История продаж" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Margin="5"/>
+            <ComboBox Name="salesHistoryBox" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Margin="5" Height="20" FontSize="12"/>
+        </StackPanel>
+        <Button Grid.Column="1" Grid.Row="7" Name="salesHistoryButton" Content="Изменить историю продаж" VerticalAlignment="Top" HorizontalAlignment="Center" Width="275" Click="salesHistoryButton_Click"/>
+        <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal">
             <Button Content="Сохранить" Name="SaveButton" Click="SaveButton_Click" Margin="5"/>
             <Button Content="Удалить" Name="DeleteButton" Click="DeleteButton_Click" Margin="5" Opacity="{Binding ID}"/>
         </StackPanel>

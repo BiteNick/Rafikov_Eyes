@@ -34,8 +34,17 @@ namespace Rafikov_Eyes
                 currentAgent = AgentInfo;
                 ComboType.SelectedIndex = currentAgent.AgentTypeID-1;
             }
-
+            Init();
             DataContext = currentAgent;
+        }
+
+        public void Init()
+        {
+            salesHistoryBox.Items.Clear();
+            foreach (ProductSale productSale in currentAgent.ProductSale)
+            {
+                salesHistoryBox.Items.Add($"{productSale.Product.Title}|{productSale.SaleDate.ToLongDateString()}|количество: {productSale.ProductCount}");
+            }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -136,6 +145,13 @@ namespace Rafikov_Eyes
                 currentAgent.Logo = myOpenFileDialog.FileName;
                 LogoImage.Source = new BitmapImage(new Uri(myOpenFileDialog.FileName));
             }
+        }
+
+        private void salesHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            SalesWindow salesWindow = new SalesWindow(currentAgent, this);
+
+            salesWindow.Show();
         }
     }
 }
